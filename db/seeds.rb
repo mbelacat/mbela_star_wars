@@ -6,15 +6,15 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
+characters = JSON.parse(StarWars::ApiClientService.get("https://swapi.dev/api/people"))
+chars_above_75 = characters["results"].select { |char| char["mass"].to_i > 75 }
 
-response = JSON.parse(StarWars::Api.get_people)
-characters = response["results"]
-
-characters.each do |char|
- # planet_id = char["homeworld"] => I create a service so I just need Id
-  characters.create(
+chars_above_75.each do |char|
+  planet =  JSON.parse(StarWars::ApiClientService.get(char["homeworld"]))["name"]
+  film = JSON.parse(StarWars::ApiClientService.get(char["film"]))["film"]
+  Character.create(
     name: char["name"],
-    mass: char["mass"]
-    # homeworld: StarWars::Api.get_people(planet_id)
+    mass: char["mass"],
+    homeworld: planet
   )
 end

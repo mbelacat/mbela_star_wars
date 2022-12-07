@@ -6,20 +6,14 @@ module StarWars
     class << self
       def get(path)
         RestClient.get(
-          "#{swapi_api_host}/#{path}",
+          "#{path}",
           {
             'Accept' => '*/*',
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
           }
         )
       rescue RestClient::ExceptionWithResponse => e
         e.response
-      end
-
-      private
-
-      def swapi_api_host
-        @swapi_api_host ||= "https://swapi.dev/api"
       end
     end
   end
